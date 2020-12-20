@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Post, Param, Delete } from '@nestjs/common';
+import { Body, Controller, Get, Post, Param, Delete, Patch } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { Task } from './tasks.model';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { UpdateTaskDto } from './dto/update-task.dto';
 
 // route handlers
 @Controller('tasks')
@@ -22,8 +23,13 @@ export class TasksController {
     // use NestJS @Body decorator to extract x-www-form-urlencoded params from POST request
     @Post()
     createTask(@Body() createTaskDto: CreateTaskDto) {
-        // console.log('title: ', title, ' description: ', description);
         return this.tasksService.createTask(createTaskDto);
+    }
+
+    // use a DTO here to make the update requests easier to modify in the future
+    @Patch('/:id/status')
+    updateTaskStatus(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
+        return this.tasksService.updateTaskStatus(id, updateTaskDto);
     }
 
     @Delete('/:id')

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Task, TaskStatus } from './tasks.model';
 import { v4 as uuid } from 'uuid'; // generate a unique ID
 import { CreateTaskDto } from './dto/create-task.dto';
+import { UpdateTaskDto } from './dto/update-task.dto';
 
 // the 'Service' is the business logic for any route to invoke from a controller
 
@@ -28,6 +29,17 @@ export class TasksService {
         }
 
         this.tasks.push(task);
+        return task;
+    }
+
+    updateTaskStatus(id: string, updateTaskDto: UpdateTaskDto): Task {
+        const { status } = updateTaskDto;
+
+        let task = this.tasks.find(e => e.id === id);
+        this.tasks = this.tasks.filter(e => e.id !== id); 
+        task.status = status; // set new status
+        this.tasks.push(task); // add it back in with the new status
+
         return task;
     }
 

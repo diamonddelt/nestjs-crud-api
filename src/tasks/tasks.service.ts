@@ -3,6 +3,7 @@ import { Task, TaskStatus } from './tasks.model';
 import { v4 as uuid } from 'uuid'; // generate a unique ID
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 
 // the 'Service' is the business logic for any route to invoke from a controller
 
@@ -16,6 +17,24 @@ export class TasksService {
 
     getTask(id: string): Task {
         return this.tasks.find(e => e.id === id);
+    }
+
+    getTasksWithFilters(filterDto: GetTasksFilterDto): Task[] {
+        const { status, search } = filterDto;
+
+        let tasks = this.getAllTasks();
+
+        // return a subset of tasks matching the provides status
+        if (status) {
+            tasks = tasks.filter(e => e.status === status);
+        }
+
+        // return a subset of tasks with the search term in either the title or the description
+        if (search) {
+            tasks = tasks.filter(e => e.title.includes(search) || e.description.includes(search));
+        }
+
+        return tasks;
     }
 
     createTask(createTaskDto: CreateTaskDto): Task {

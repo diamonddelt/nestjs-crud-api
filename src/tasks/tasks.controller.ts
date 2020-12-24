@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Param, Delete, Patch, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Param, Delete, Patch, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { Task } from './tasks.model';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -27,6 +27,7 @@ export class TasksController {
 
     // use NestJS @Body decorator to extract x-www-form-urlencoded params from POST request
     @Post()
+    @UsePipes(ValidationPipe)
     createTask(@Body() createTaskDto: CreateTaskDto) {
         return this.tasksService.createTask(createTaskDto);
     }
